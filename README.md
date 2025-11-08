@@ -7,6 +7,7 @@
 - **Import CV** - Upload existing resumes and automatically parse them into structured format
 - **AI Enhancement** - Polish your professional summary with AI-powered suggestions
 - **Job Adaptation** - Tailor your CV to specific job descriptions automatically
+- **Professional Photo Generation** - Upload your photo and let AI generate a professional headshot
 - **Real-time Preview** - See changes to your CV instantly
 - **Modern UI** - Clean, professional interface with dark/light mode support
 - **Form Validation** - Smart validation to ensure your CV is complete and error-free
@@ -46,8 +47,18 @@ npm install
 
 3. Create a `.env` file in the root directory:
 ```env
-GEMINI_API_KEY=your_gemini_api_key_here
+GOOGLE_GENAI_API_KEY=your_gemini_api_key_here
 ```
+
+> **Note**: The professional photo feature uses Gemini's image generation:
+> - Uses `gemini-2.5-flash-image` to generate professional AI headshots
+> - Analyzes your photo and creates a completely new professional version
+> - Requires `GOOGLE_GENAI_API_KEY`
+> 
+> ⚠️ **Rate Limits**: 
+> - Free tier: 15 requests/minute, 1,500 requests/day
+> - If you hit the limit, wait 24 hours or upgrade to a paid plan
+> - Upgrade at: https://aistudio.google.com/
 
 4. Run the development server:
 ```bash
@@ -61,10 +72,32 @@ npm run dev
 ## 🎯 Usage
 
 1. **Import a CV**: Click "Import CV" to upload an existing resume (PDF or paste text)
-2. **Fill in Details**: Complete or edit your personal information, experience, education, projects, and skills
-3. **AI Enhance**: Use "AI Enhance" to improve your professional summary
-4. **Adapt to Job**: Paste a job description and click "Adapt to Job" to tailor your CV
-5. **Preview**: View your CV in real-time on the right panel
+2. **Upload Photo**: Click "Upload Photo" to add your profile picture
+3. **Enhance Photo**: Click "Enhance Photo" to generate a professional headshot (AI analyzes and enhances your photo)
+4. **Fill in Details**: Complete or edit your personal information, experience, education, projects, and skills
+5. **AI Enhance**: Use "AI Enhance" to improve your professional summary
+6. **Adapt to Job**: Paste a job description and click "Adapt to Job" to tailor your CV
+7. **Preview**: View your CV in real-time on the right panel
+
+### Professional Photo Enhancement
+
+The photo enhancement feature uses Google Gemini's AI to create professional headshots:
+
+**How it works:**
+1. Upload your photo (any casual photo works)
+2. Click "Enhance Photo"
+3. Gemini Vision AI analyzes your photo for professionalism
+4. Gemini Image Generation creates a new professional headshot with:
+   - Professional business attire (suit, blazer)
+   - Clean, neutral background
+   - Studio-quality lighting
+   - Professional expression
+
+**Tips for best results:**
+- Use a clear, well-lit photo
+- Face should be clearly visible
+- Works with any style of photo (casual, selfie, etc.)
+- The AI analyzes and generates a completely new professional version
 
 ## 📁 Project Structure
 
@@ -93,7 +126,19 @@ optimumcv/
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `GEMINI_API_KEY` | Google Gemini API key for AI features | Yes |
+| `GOOGLE_GENAI_API_KEY` | Google Gemini API key for AI features including image generation | Yes |
+
+### Getting API Keys
+
+**Google Gemini API Key:**
+1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Create a new API key
+3. Add it to your `.env` file as `GOOGLE_GENAI_API_KEY`
+
+This single API key powers all AI features:
+- CV text enhancement and adaptation
+- Photo analysis with Gemini Vision
+- Professional headshot generation with Gemini Image
 
 ## 🤝 Contributing
 

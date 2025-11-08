@@ -8,7 +8,6 @@ import { useFieldArray, useForm, type Resolver } from "react-hook-form"
 import {
   mockAdaptCV,
   mockEnhanceExperience,
-  mockEnhancePhoto,
   mockEnhanceSummary,
   mockImportCV,
   type MockImportResult,
@@ -311,11 +310,30 @@ export function CVBuilder() {
 
     try {
       setIsEnhancingPhoto(true)
-      const enhanced = await mockEnhancePhoto(photoFile)
-      setPhotoPreview(enhanced)
-      toast.success("Photo retouched for professional polish.")
+      toast.info("Analyzing your photo and generating professional version...")
+
+      // Create FormData to send the file
+      const formData = new FormData()
+      formData.append("photo", photoFile)
+
+      // Call the API endpoint
+      const response = await fetch("/api/ai/photo", {
+        method: "POST",
+        body: formData,
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to generate professional photo")
+      }
+
+      setPhotoPreview(data.photoUrl)
+      toast.success("Professional photo generated successfully with AI!")
     } catch (error) {
-      toast.error("Photo enhancement service is busy. Try again shortly.")
+      console.error("[Photo Enhancement] Error:", error)
+      const errorMessage = error instanceof Error ? error.message : "Failed to generate professional photo"
+      toast.error(errorMessage, { duration: 5000 })
     } finally {
       setIsEnhancingPhoto(false)
     }

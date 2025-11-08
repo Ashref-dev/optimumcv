@@ -400,3 +400,147 @@ export const importCVWithAI = async (resumeText: string) => {
   const cv = cvSchema.parse(sanitized)
   return ensureIds(cv)
 }
+
+/**
+ * Generate a professional headshot photo using AI
+ * Analyzes the uploaded photo and creates a professional version using Gemini's image generation
+ */
+export async function generateProfessionalPhoto(file: File): Promise<string> {
+  try {
+    const apiKey = process.env.GOOGLE_GENAI_API_KEY
+    if (!apiKey) {
+      throw new Error("GOOGLE_GENAI_API_KEY is not configured")
+    }
+
+    // Convert file to base64
+    const arrayBuffer = await file.arrayBuffer()
+    const base64 = Buffer.from(arrayBuffer).toString('base64')
+    const mimeType = file.type || 'image/jpeg'
+
+    // Use Gemini's vision model to analyze the photo
+    const client = ensureClient()
+    
+    const analysisPrompt = `Analyze this person's photo and determine if it's professional enough for a CV/resume. 
+    
+A professional photo should have:
+- Professional attire (suit, blazer, or formal business wear)
+- Neutral, clean background (solid colors like white, gray, or blue)
+- Good lighting and clarity
+- Professional expression
+- Head and shoulders composition
+
+Describe this photo in detail, including the person's appearance, what they're wearing, the background, lighting, and pose. Then explain what specific changes would make it more professional. Be very specific and detailed in your description.`
+
+    const analysisResponse = await client.models.generateContent({
+      model: "gemini-2.0-flash-exp",
+      contents: [{
+        role: "user",
+        parts: [
+          {
+            inlineData: {
+              data: base64,
+              mimeType: mimeType
+            }
+          },
+          { text: analysisPrompt }
+        ]
+      }]
+    })
+
+    const analysis = typeof analysisResponse.text === "string" ? analysisResponse.text.trim() : ""
+    
+    if (!analysis) {
+      throw new Error("Failed to analyze photo")
+    }
+
+    console.log("[Photo AI] Analysis:", analysis)
+
+    // Generate professional photo using Gemini's image generation model
+    const imagePrompt = `Professional corporate headshot photograph for CV and resume. Create a high-quality professional headshot with these characteristics:
+- Professional business attire: dark suit jacket, white or light blue dress shirt, professional appearance
+- Clean solid background: soft neutral color (light gray, white, or soft blue)
+- Professional studio lighting: even, soft lighting with no harsh shadows
+- Expression: confident, approachable, slight professional smile
+- Composition: head and shoulders, centered, facing camera
+- Style: photorealistic, high quality, sharp focus, professional photography
+- Image quality: 4K resolution, studio quality
+
+Based on the original photo analysis: The person should maintain similar general features and characteristics while presenting in a completely professional corporate style.`
+
+    console.log("[Photo AI] Generating professional photo with Gemini...")
+
+    // Use Gemini's image generation model
+    try {
+      const imageGenResponse = await client.models.generateContentStream({
+        model: "gemini-2.5-flash-image",
+        config: {
+          responseModalities: ['IMAGE'],
+        },
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              {
+                text: imagePrompt,
+              },
+            ],
+          },
+        ],
+      } as any) // Using any due to beta API types
+
+      // Collect the generated image from the stream
+      let imageData: string | null = null
+      let imageMimeType: string | null = null
+
+      for await (const chunk of imageGenResponse) {
+        if (chunk.candidates?.[0]?.content?.parts?.[0]?.inlineData) {
+          const inlineData = chunk.candidates[0].content.parts[0].inlineData
+          imageData = inlineData.data || null
+          imageMimeType = inlineData.mimeType || 'image/png'
+          console.log("[Photo AI] Image chunk received, mime type:", imageMimeType)
+          break // Take the first image
+        }
+      }
+
+      if (!imageData) {
+        console.log("[Photo AI] No image generated, falling back to basic enhancement")
+        throw new Error("BASIC_ENHANCEMENT_NEEDED:" + analysis)
+      }
+
+      console.log("[Photo AI] Image generated successfully, size:", imageData.length)
+
+      // Convert base64 to blob URL
+      const binaryString = Buffer.from(imageData, 'base64')
+      const outputMimeType = imageMimeType || 'image/png'
+      const blob = new Blob([binaryString], { type: outputMimeType })
+      const url = URL.createObjectURL(blob)
+
+      return url
+      
+    } catch (genError: any) {
+      // Check if it's a rate limit or quota error
+      if (genError?.message?.includes('429') || 
+          genError?.message?.includes('quota') || 
+          genError?.message?.includes('RESOURCE_EXHAUSTED') ||
+          genError?.cause?.includes('429') ||
+          genError?.cause?.includes('quota')) {
+        console.log("[Photo AI] Rate limit/quota exceeded")
+        throw new Error("Gemini image generation quota exceeded. Your free tier limit has been reached. Please wait 24 hours for quota reset or upgrade to a paid plan at https://aistudio.google.com/")
+      }
+      
+      // For other generation errors, throw meaningful error
+      console.log("[Photo AI] Image generation failed:", genError?.message)
+      throw new Error("Failed to generate image: " + (genError?.message || "Unknown error"))
+    }
+
+  } catch (error) {
+    console.error("[Photo AI] Error:", error)
+    
+    // Re-throw the error so user sees the actual message
+    if (error instanceof Error) {
+      throw error
+    }
+    
+    throw new Error("Failed to generate professional photo")
+  }
+}
