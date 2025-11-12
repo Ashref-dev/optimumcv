@@ -102,19 +102,22 @@ export function generateHarvardStylePDF(
     return y + lines.length * lineHeight;
   };
 
-  // Add photo if available
+  // Add photo if available (positioned higher to avoid overlap)
   if (photo) {
     try {
       const photoSize = 30;
-      pdf.addImage(photo, "JPEG", pageWidth - margin - photoSize, margin, photoSize, photoSize);
+      const photoX = pageWidth - margin - photoSize;
+      const photoY = margin - 5; // Move photo up 5mm
+      pdf.addImage(photo, "JPEG", photoX, photoY, photoSize, photoSize);
     } catch (error) {
       console.warn("Could not add photo to PDF:", error);
     }
   }
 
-  // Header - Name
+  // Header - Name (leave space for photo on the right)
   pdf.setFontSize(22);
   pdf.setFont("helvetica", "bold");
+  const nameMaxWidth = photo ? contentWidth - 35 : contentWidth; // Reserve space for photo
   pdf.text(data.personal.fullName.toUpperCase(), margin, yPosition);
   yPosition += 8;
 
