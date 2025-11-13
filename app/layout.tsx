@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     siteName: "OptimumCV",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og.jpg",
         width: 1200,
         height: 630,
         alt: "OptimumCV - AI CV Builder",
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     title: "OptimumCV — AI-Powered Professional CV Builder",
     description:
       "Build, enhance, and adapt professional CVs in minutes with AI-powered tools.",
-    images: ["/og-image.png"],
+    images: ["/og.jpg"],
     creator: "@rayenfassatoui",
   },
   robots: {
