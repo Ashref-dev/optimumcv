@@ -25,5 +25,8 @@ export { optimizeCVForATS } from "./cv-optimizer"
 // Photo Generation
 export { generateProfessionalPhoto } from "./photo-generator"
 
+// Motivation Letter
+export { generateMotivationLetterWithAI } from "./motivation-letter-generator"
+
 // Utility functions (if needed externally)
 export { extractKeywords, titleCase, mergeSkills } from "./text-utils"

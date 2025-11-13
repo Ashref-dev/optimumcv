@@ -1,15 +1,15 @@
 "use client"
 
-import { BriefcaseBusiness, Download, FileDown, Github, Sparkles } from "lucide-react"
+import { BriefcaseBusiness, Download, FileDown, Github, Mail, Sparkles } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { ModeToggle } from "@/components/mode-toggle"
 import { Button } from "@/components/ui/button"
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
 } from "@/components/ui/tooltip"
 
 type ActionBarProps = {
@@ -19,7 +19,8 @@ type ActionBarProps = {
   isDownloading: boolean
   onImportClick: () => void
   onEnhanceSummary: () => void
-  onAdapt: () => void
+  onAdaptClick: () => void
+  onMotivationLetterClick: () => void
   onDownload: () => void
 }
 
@@ -30,7 +31,8 @@ export function ActionBar({
   isDownloading,
   onImportClick,
   onEnhanceSummary,
-  onAdapt,
+  onAdaptClick,
+  onMotivationLetterClick,
   onDownload,
 }: ActionBarProps) {
   return (
@@ -62,13 +64,25 @@ export function ActionBar({
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" size="sm" onClick={onAdapt} disabled={isAdapting}>
+            <Button variant="outline" size="sm" onClick={onAdaptClick} disabled={isAdapting}>
               <BriefcaseBusiness className={cn("size-4", isAdapting && "animate-pulse")} />
               Adapt to Job
             </Button>
           </TooltipTrigger>
           <TooltipContent className="max-w-xs">
             <p className="text-xs">Paste a job description to automatically tailor your CV to match the role's requirements</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="outline" size="sm" onClick={onMotivationLetterClick}>
+              <Mail className="size-4" />
+              Motivation Letter
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent className="max-w-xs">
+            <p className="text-xs">Generate a personalized motivation letter for your job application</p>
           </TooltipContent>
         </Tooltip>
         

@@ -6,16 +6,16 @@ import { toast } from "sonner"
 import { useFieldArray, useForm, type Resolver } from "react-hook-form"
 
 import {
-    mockAdaptCV,
-    mockEnhanceExperience, mockImportCV,
-    mockOptimizeCVForATS,
-    type MockImportResult
+  mockAdaptCV,
+  mockEnhanceExperience, mockImportCV,
+  mockOptimizeCVForATS,
+  type MockImportResult
 } from "@/lib/ai/mock"
 import {
-    cvSchema,
-    defaultCV,
-    type CVData,
-    type ExperienceItem
+  cvSchema,
+  defaultCV,
+  type CVData,
+  type ExperienceItem
 } from "@/lib/cv"
 import { generateHarvardStylePDF } from "@/lib/pdf-generator"
 import { CVPreview } from "@/components/cv/cv-preview"
@@ -29,22 +29,17 @@ import { EducationSection } from "@/components/cv/builder/education-section"
 import { ExperienceSection } from "@/components/cv/builder/experience-section"
 import { FormTabs } from "@/components/cv/builder/form-tabs"
 import { ImportPanel } from "@/components/cv/builder/import-panel"
-import { JobInsights } from "@/components/cv/builder/job-insights"
 import { PersonalSection } from "@/components/cv/builder/personal-section"
 import { ProjectsSection } from "@/components/cv/builder/projects-section"
 import { SkillsSection } from "@/components/cv/builder/skills-section"
+import { AdaptJobModal } from "@/components/cv/builder/adapt-job-modal"
+import { MotivationLetterModal } from "@/components/cv/builder/motivation-letter-modal"
 
 type AIResult<TData> = {
   data?: TData
   fallback: boolean
   error?: string
 }
-
-const jobHints = [
-  "Product Designer · SaaS",
-  "Growth Marketer · Series B",
-  "Senior Frontend Engineer · EMEA",
-]
 
 export function CVBuilder() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
@@ -58,6 +53,8 @@ export function CVBuilder() {
   const [isAdapting, setIsAdapting] = useState(false)
   const [isEnhancingPhoto, setIsEnhancingPhoto] = useState(false)
   const [isDownloading, setIsDownloading] = useState(false)
+  const [showAdaptJobModal, setShowAdaptJobModal] = useState(false)
+  const [showMotivationLetterModal, setShowMotivationLetterModal] = useState(false)
 
   const photoInputRef = useRef<HTMLInputElement | null>(null)
   const resumeInputRef = useRef<HTMLInputElement | null>(null)
@@ -288,6 +285,66 @@ export function CVBuilder() {
     }
   }
 
+  const handleAdaptJobModalOpen = () => {
+    setShowAdaptJobModal(true)
+  }
+
+  const handleAdaptJobModalSave = async (jobPrompt: string) => {
+    setJobDescription(jobPrompt)
+    
+    try {
+      setIsAdapting(true)
+      const currentCV = form.getValues()
+      const { data, fallback, error: aiError } = await requestAI<{ cv: CVData }>("adapt-cv", {
+        cv: currentCV,
+        jobDescription: jobPrompt,
+      })
+
+      let adapted = data?.cv
+      let usedFallback = fallback
+
+      if (!adapted) {
+        adapted = await mockAdaptCV(currentCV, jobPrompt)
+        usedFallback = true
+      }
+
+      form.reset(adapted)
+      toast.success(usedFallback ? "CV aligned using fallback AI." : "CV aligned with Gemini insights.")
+      if (usedFallback && aiError) {
+        toast.info(aiError)
+      }
+    } catch (error) {
+      toast.error("Could not adapt to that job description. Please retry.")
+    } finally {
+      setIsAdapting(false)
+    }
+  }
+
+  const handleGenerateMotivationLetter = async (jobPosition: string): Promise<string> => {
+    const currentCV = form.getValues()
+    
+    try {
+      const { data, error: aiError } = await requestAI<{ letter: string }>("generate-motivation-letter", {
+        cv: currentCV,
+        jobPosition,
+      })
+
+      if (data?.letter) {
+        toast.success("Motivation letter generated successfully!")
+        return data.letter
+      }
+
+      if (aiError) {
+        toast.info(aiError)
+      }
+      
+      throw new Error("Failed to generate motivation letter")
+    } catch (error) {
+      toast.error("Could not generate motivation letter. Please retry.")
+      throw error
+    }
+  }
+
   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log("[Photo Upload] Event triggered", event)
     const file = event.target.files?.[0]
@@ -410,7 +467,8 @@ export function CVBuilder() {
             isDownloading={isDownloading}
             onImportClick={() => resumeInputRef.current?.click()}
             onEnhanceSummary={handleSummaryEnhance}
-            onAdapt={handleAdapt}
+            onAdaptClick={handleAdaptJobModalOpen}
+            onMotivationLetterClick={() => setShowMotivationLetterModal(true)}
             onDownload={handleDownloadCV}
           />
         </div>
@@ -459,9 +517,22 @@ export function CVBuilder() {
           <CVPreviewPanel>
             <CVPreview data={cv} photo={photoPreview} />
           </CVPreviewPanel>
-          <JobInsights jobDescription={jobDescription} jobHints={jobHints} onChange={setJobDescription} />
         </div>
       </CardContent>
+
+      <AdaptJobModal
+        open={showAdaptJobModal}
+        onOpenChange={setShowAdaptJobModal}
+        initialValue={jobDescription}
+        onSave={handleAdaptJobModalSave}
+      />
+
+      <MotivationLetterModal
+        open={showMotivationLetterModal}
+        onOpenChange={setShowMotivationLetterModal}
+        onGenerate={handleGenerateMotivationLetter}
+        fullName={cv.personal.fullName}
+      />
     </Card>
   )
 }

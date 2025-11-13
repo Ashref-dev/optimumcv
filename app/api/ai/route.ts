@@ -2,12 +2,13 @@ import { NextResponse } from "next/server"
 
 import { cvSchema, experienceSchema } from "@/lib/cv"
 import {
-  adaptCVWithAI,
-  enhanceExperienceWithAI,
-  enhanceSummaryWithAI,
-  importCVWithAI,
-  isGenAIConfigured,
-  optimizeCVForATS,
+    adaptCVWithAI,
+    enhanceExperienceWithAI,
+    enhanceSummaryWithAI,
+    importCVWithAI,
+    isGenAIConfigured,
+    optimizeCVForATS,
+    generateMotivationLetterWithAI,
 } from "@/lib/ai/google"
 
 const json = (data: unknown, init?: ResponseInit) =>
@@ -93,6 +94,21 @@ export async function POST(request: Request) {
         } catch (error) {
           console.error("/api/ai optimize-ats error", error)
           return json({ error: "Failed to optimize CV for ATS." }, { status: 422 })
+        }
+      }
+
+      case "generate-motivation-letter": {
+        if (!payload?.cv || typeof payload.jobPosition !== "string") {
+          return json({ error: "CV data and job position are required." }, { status: 400 })
+        }
+
+        try {
+          const cv = cvSchema.parse(payload.cv)
+          const letter = await generateMotivationLetterWithAI(cv, payload.jobPosition)
+          return json({ letter })
+        } catch (error) {
+          console.error("/api/ai generate-motivation-letter error", error)
+          return json({ error: "Failed to generate motivation letter." }, { status: 422 })
         }
       }
 
