@@ -100,6 +100,7 @@ export const defaultCV = (): CVData => ({
     location: "Paris, France",
     website: "https://jordansmith.design",
     linkedin: "https://linkedin.com/in/jordansmith",
+    photoStyle: "square" as const,
   },
   experience: [
     {
