@@ -4,14 +4,21 @@
 
 ## 🌟 Features
 
+### Core Features
 - **Import CV** - Upload existing resumes (PDF) and automatically parse them into structured format
+- **Photo Upload & Crop** - Add and crop profile pictures with square/circle style options
 - **ATS Optimization** - Optimize your entire CV for Applicant Tracking Systems with action verbs, keywords, and metrics
 - **Job Adaptation** - Tailor your CV to specific job descriptions automatically
 - **PDF Download** - Export your CV as a professional Harvard-style PDF
- - **Real-time Preview** - See changes to your CV instantly
 - **Real-time Preview** - See changes to your CV instantly
 - **Modern UI** - Clean, professional interface with dark/light mode support
 - **Form Validation** - Smart validation to ensure your CV is complete and error-free
+
+### AI-Powered Tools
+- **Internship Assistant** - Upload internship PDFs to get AI-suggested email subjects and auto-generated professional application emails (with company email extraction)
+- **Motivation Letter Generator** - Create personalized motivation letters tailored to specific job positions
+- **Smart Summary Enhancement** - AI-powered professional summary optimization
+- **Experience Enhancement** - Improve individual work experience descriptions with AI
 
 ## 🚀 Tech Stack
 
@@ -69,15 +76,32 @@ npm run dev
 
 ## 🎯 Usage
 
+### Basic CV Creation
 1. **Import a CV**: Click "Import CV" to upload an existing resume (PDF format)
-2. **Upload Photo**: Click "Upload Photo" to add your profile picture
-4. **Fill in Details**: Complete or edit your personal information, experience, education, projects, and skills
+2. **Upload Photo**: Click "Upload Photo" to add your profile picture, then crop and choose square/circle style
+3. **Fill in Details**: Complete or edit your personal information, experience, education, projects, and skills
+4. **Preview**: View your CV in real-time on the right panel
+
+### AI Enhancement Features
 5. **ATS Optimize**: Click "ATS Optimize" to make your entire CV ATS-friendly with action verbs, keywords, and metrics
 6. **Adapt to Job**: Paste a job description and click "Adapt to Job" to tailor your CV to that specific role
-7. **Download PDF**: Click "Download PDF" to export your CV as a professional Harvard-style PDF
-8. **Preview**: View your CV in real-time on the right panel
+7. **Enhance Sections**: Use AI to improve your professional summary or individual work experiences
 
- 
+### Additional Tools
+8. **Internship Assistant**: 
+   - Click "Internship Assistant" button
+   - Upload an internship offer PDF
+   - Get AI-suggested email subjects based on the content
+   - Generate professional application emails automatically
+   - Extract company email and send directly via mailto link
+
+9. **Motivation Letter**: 
+   - Click "Motivation Letter" button
+   - Enter the job position
+   - Get an AI-generated personalized motivation letter
+   - Download as PDF
+
+10. **Download PDF**: Click "Download PDF" to export your CV as a professional Harvard-style PDF
 
 ## 📁 Project Structure
 
@@ -106,7 +130,7 @@ optimumcv/
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `GOOGLE_GENAI_API_KEY` | Google Gemini API key for AI text features (CV import, enhancement, adaptation) | Yes |
+| `GOOGLE_GENAI_API_KEY` | Google Gemini API key for all AI features (CV import, enhancement, adaptation, internship assistant, motivation letters) | Yes |
 
 ### Getting API Key
 
@@ -115,13 +139,14 @@ optimumcv/
 2. Create a new API key
 3. Add it to your `.env` file as `GOOGLE_GENAI_API_KEY`
 
-This API key powers the text AI features:
+This API key powers all AI features:
 - CV parsing and import
 - ATS optimization with keywords and action verbs
 - Professional summary enhancement
+- Experience description enhancement
 - Job description adaptation
-
-Photo enhancement runs in your browser and doesn't need any API key!
+- Internship email generation and analysis
+- Motivation letter generation
 
 ## 📥 PDF Features
 
