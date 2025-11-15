@@ -22,9 +22,6 @@ export { importCVWithAI } from "./cv-importer"
 // ATS Optimization
 export { optimizeCVForATS } from "./cv-optimizer"
 
-// Photo Generation
-export { generateProfessionalPhoto } from "./photo-generator"
-
 // Motivation Letter
 export { generateMotivationLetterWithAI } from "./motivation-letter-generator"
 

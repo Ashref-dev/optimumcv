@@ -16,6 +16,5 @@ export {
   adaptCVWithAI,
   importCVWithAI,
   optimizeCVForATS,
-  generateProfessionalPhoto,
   generateMotivationLetterWithAI,
 } from "./gemini"

@@ -8,7 +8,7 @@
 - **ATS Optimization** - Optimize your entire CV for Applicant Tracking Systems with action verbs, keywords, and metrics
 - **Job Adaptation** - Tailor your CV to specific job descriptions automatically
 - **PDF Download** - Export your CV as a professional Harvard-style PDF
-- **Professional Photo Enhancement** - Upload your photo and apply professional filters (brightness, contrast, saturation)
+ - **Real-time Preview** - See changes to your CV instantly
 - **Real-time Preview** - See changes to your CV instantly
 - **Modern UI** - Clean, professional interface with dark/light mode support
 - **Form Validation** - Smart validation to ensure your CV is complete and error-free
@@ -57,10 +57,6 @@ GOOGLE_GENAI_API_KEY=your_gemini_api_key_here
 >   - CV import with AI parsing
 >   - Professional summary enhancement
 >   - Job description adaptation
-> - **Photo Enhancement**: Uses browser-side filters (no API needed!)
->   - Applies professional brightness, contrast, and color adjustments
->   - Works offline, no quota limits
->   - Instant results
 
 4. Run the development server:
 ```bash
@@ -75,37 +71,13 @@ npm run dev
 
 1. **Import a CV**: Click "Import CV" to upload an existing resume (PDF format)
 2. **Upload Photo**: Click "Upload Photo" to add your profile picture
-3. **Enhance Photo**: Click "Enhance Photo" to apply professional filters (brightness, contrast, saturation)
 4. **Fill in Details**: Complete or edit your personal information, experience, education, projects, and skills
 5. **ATS Optimize**: Click "ATS Optimize" to make your entire CV ATS-friendly with action verbs, keywords, and metrics
 6. **Adapt to Job**: Paste a job description and click "Adapt to Job" to tailor your CV to that specific role
 7. **Download PDF**: Click "Download PDF" to export your CV as a professional Harvard-style PDF
 8. **Preview**: View your CV in real-time on the right panel
 
-### Professional Photo Enhancement
-
-The photo enhancement feature uses browser-side image processing for instant results:
-
-**How it works:**
-1. Upload your photo (any format)
-2. Click "Enhance Photo"
-3. Professional filters are applied instantly:
-   - Brightness boost (+10%)
-   - Contrast enhancement (+20%)
-   - Color saturation adjustment (-15% for corporate look)
-   - High-quality output
-
-**Benefits:**
-- ⚡ Instant results (no API calls)
-- 🆓 Completely free (no quota limits)
-- 🔒 Privacy-friendly (processed in your browser)
-- 💾 Works offline
-
-**Tips for best results:**
-- Use a clear, well-lit photo
-- Face should be clearly visible
-- Photo will look more professional and polished
-- Works with any photo style
+ 
 
 ## 📁 Project Structure
 

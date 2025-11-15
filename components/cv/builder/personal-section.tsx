@@ -2,10 +2,9 @@
 
 import { RefObject } from "react"
 import { UseFormReturn } from "react-hook-form"
-import { ImageDown, Upload, Square, Circle } from "lucide-react"
+import { Upload, Square, Circle } from "lucide-react"
 
 import { type CVData } from "@/lib/cv"
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -14,19 +13,15 @@ import { Textarea } from "@/components/ui/textarea"
 type PersonalSectionProps = {
   form: UseFormReturn<CVData>
   summaryContext?: string
-  photoInputRef: RefObject<HTMLInputElement | null>
-  isEnhancingPhoto: boolean
+  photoInputRef: RefObject<HTMLInputElement>
   onPhotoChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  onEnhancePhoto: () => void
 }
 
 export function PersonalSection({
   form,
   summaryContext,
   photoInputRef,
-  isEnhancingPhoto,
   onPhotoChange,
-  onEnhancePhoto,
 }: PersonalSectionProps) {
   return (
     <div className="space-y-6 rounded-xl border border-border/60 bg-card/70 p-5">
@@ -57,16 +52,7 @@ export function PersonalSection({
           >
             <Upload className="size-4" /> Upload Photo
           </Button>
-          <Button 
-            type="button"
-            variant="ghost" 
-            size="sm" 
-            onClick={onEnhancePhoto} 
-            disabled={isEnhancingPhoto}
-          >
-            <ImageDown className={cn("size-4", isEnhancingPhoto && "animate-spin")} />
-            Enhance Photo
-          </Button>
+          
           
           {/* Photo Style Toggle */}
           <div className="ml-auto flex items-center gap-1 rounded-md border border-border/60 p-0.5">

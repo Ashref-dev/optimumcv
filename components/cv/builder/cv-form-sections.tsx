@@ -19,9 +19,7 @@ type CVFormSectionsProps = {
   projects: UseFieldArrayReturn<CVData, "projects", "fieldId">
   summaryContext: string
   photoInputRef: React.RefObject<HTMLInputElement>
-  isEnhancingPhoto: boolean
   onPhotoChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  onEnhancePhoto: () => void
   experienceLoading: string | null
   onExperienceEnhance: (index: number) => void
   enhanceLabel: string
@@ -42,9 +40,7 @@ export function CVFormSections({
   projects,
   summaryContext,
   photoInputRef,
-  isEnhancingPhoto,
   onPhotoChange,
-  onEnhancePhoto,
   experienceLoading,
   onExperienceEnhance,
   enhanceLabel,
@@ -76,9 +72,7 @@ export function CVFormSections({
               form={form}
               summaryContext={summaryContext}
               photoInputRef={photoInputRef}
-              isEnhancingPhoto={isEnhancingPhoto}
               onPhotoChange={onPhotoChange}
-              onEnhancePhoto={onEnhancePhoto}
             />
           }
           experience={

@@ -57,14 +57,12 @@ export function CVBuilder() {
   // Photo management
   const {
     photoPreview,
-    isEnhancingPhoto,
     showPhotoCropModal,
     pendingPhotoFile,
     photoInputRef,
     setShowPhotoCropModal,
     handlePhotoChange,
     handlePhotoCropSave,
-    handleEnhancePhoto,
   } = usePhotoManagement()
 
   // Modal operations
@@ -162,9 +160,7 @@ export function CVBuilder() {
           projects={projects}
           summaryContext={summaryContext}
           photoInputRef={photoInputRef}
-          isEnhancingPhoto={isEnhancingPhoto}
           onPhotoChange={handlePhotoChange}
-          onEnhancePhoto={handleEnhancePhoto}
           experienceLoading={experienceLoading}
           onExperienceEnhance={(index) => void handleExperienceEnhance(index, jobDescription)}
           enhanceLabel={enhanceLabel}
