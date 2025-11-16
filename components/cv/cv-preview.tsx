@@ -16,10 +16,11 @@ export function CVPreview({ data, photo, className }: CVPreviewProps) {
     <article
       id="cv-preview-content"
       className={cn(
-        "bg-white text-slate-900 dark:bg-zinc-900 dark:text-zinc-50 mx-auto w-full max-w-[840px] rounded-xl border border-primary/10 p-12 shadow-lg",
-        "font-serif",
+        "bg-white text-slate-900 dark:bg-zinc-900 dark:text-zinc-50 mx-auto w-full rounded-xl border border-primary/10 p-12 shadow-lg",
+        "font-serif aspect-[1/1.414]",
         className
       )}
+      style={{ maxWidth: "794px" }}
     >
       <header className="mb-6 border-b-2 border-slate-800 dark:border-slate-200 pb-4">
         <div className="flex items-start justify-between gap-6">
