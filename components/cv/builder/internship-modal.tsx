@@ -6,12 +6,12 @@ import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -37,7 +37,7 @@ type InternshipModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   onAnalyze: (file: File) => Promise<InternshipAnalysisResponse>
-  onGenerateEmails: (subject: string) => Promise<InternshipEmails>
+  onGenerateEmails: (subject: string, language: "en" | "fr") => Promise<InternshipEmails>
   fullName: string
 }
 
@@ -56,6 +56,7 @@ export function InternshipModal({
   const [emails, setEmails] = useState<InternshipEmails | null>(null)
   const [companyEmail, setCompanyEmail] = useState<string | null>(null)
   const [companyName, setCompanyName] = useState<string | null>(null)
+  const [language, setLanguage] = useState<"en" | "fr">("en")
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +104,7 @@ export function InternshipModal({
       setIsGeneratingEmails(true)
       setSelectedSubject(subject)
       const loadingToast = toast.info("Generating professional emails with AI...", { duration: Infinity })
-      const generatedEmails = await onGenerateEmails(subject)
+      const generatedEmails = await onGenerateEmails(subject, language)
       setEmails(generatedEmails)
       toast.dismiss(loadingToast)
       toast.success("Professional emails generated successfully!")
@@ -162,10 +163,32 @@ export function InternshipModal({
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <FileText className="size-5" />
-            Internship Application Assistant
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="size-5" />
+              Internship Application Assistant
+            </DialogTitle>
+            <div className="flex items-center gap-1 rounded-md border border-border/60 p-0.5">
+              <Button
+                type="button"
+                variant={language === "en" ? "default" : "ghost"}
+                size="sm"
+                className="h-7 px-3 text-xs"
+                onClick={() => setLanguage("en")}
+              >
+                EN
+              </Button>
+              <Button
+                type="button"
+                variant={language === "fr" ? "default" : "ghost"}
+                size="sm"
+                className="h-7 px-3 text-xs"
+                onClick={() => setLanguage("fr")}
+              >
+                FR
+              </Button>
+            </div>
+          </div>
           <DialogDescription>
             Upload an internship PDF to get AI-powered subject suggestions and professional email templates.
           </DialogDescription>

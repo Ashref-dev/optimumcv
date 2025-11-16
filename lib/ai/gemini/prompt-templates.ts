@@ -306,7 +306,8 @@ Candidate Profile:
 export const createInternshipEmailGenerationPrompt = (
   internshipText: string,
   cvData: CVData,
-  selectedSubject: string
+  selectedSubject: string,
+  language: "en" | "fr" = "en"
 ): string => {
   const cvSummary = `
 Candidate Profile:
@@ -321,8 +322,14 @@ Candidate Profile:
 - Education: ${cvData.education.slice(0, 2).map(edu => `${edu.degree} from ${edu.school}`).join("; ")}
   `.trim()
 
+  const languageInstruction = language === "fr"
+    ? "**IMPORTANT: Generate BOTH emails in FRENCH (Français). Use formal French business language.**"
+    : "**IMPORTANT: Generate BOTH emails in ENGLISH.**"
+
   return [
     "You are a professional email writer helping a candidate apply for an internship.",
+    "",
+    languageInstruction,
     "",
     "INTERNSHIP DOCUMENT:",
     "```",

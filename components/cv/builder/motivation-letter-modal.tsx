@@ -19,7 +19,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 type MotivationLetterModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onGenerate: (jobPosition: string) => Promise<string>
+  onGenerate: (jobPosition: string, language: "en" | "fr") => Promise<string>
   fullName: string
 }
 
@@ -34,13 +34,14 @@ export function MotivationLetterModal({
   const [editedLetter, setEditedLetter] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
   const [activeTab, setActiveTab] = useState<"input" | "preview">("input")
+  const [language, setLanguage] = useState<"en" | "fr">("en")
 
   const handleGenerate = async () => {
     if (!jobPosition.trim()) return
 
     try {
       setIsGenerating(true)
-      const letter = await onGenerate(jobPosition)
+      const letter = await onGenerate(jobPosition, language)
       setGeneratedLetter(letter)
       setEditedLetter(letter)
       setActiveTab("preview")
@@ -110,7 +111,29 @@ export function MotivationLetterModal({
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle className="text-lg sm:text-xl">Generate Motivation Letter</DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-lg sm:text-xl">Generate Motivation Letter</DialogTitle>
+            <div className="flex items-center gap-1 rounded-md border border-border/60 p-0.5">
+              <Button
+                type="button"
+                variant={language === "en" ? "default" : "ghost"}
+                size="sm"
+                className="h-7 px-3 text-xs"
+                onClick={() => setLanguage("en")}
+              >
+                EN
+              </Button>
+              <Button
+                type="button"
+                variant={language === "fr" ? "default" : "ghost"}
+                size="sm"
+                className="h-7 px-3 text-xs"
+                onClick={() => setLanguage("fr")}
+              >
+                FR
+              </Button>
+            </div>
+          </div>
           <DialogDescription className="text-sm">
             Enter the job position or details to generate a personalized motivation letter.
           </DialogDescription>

@@ -2,13 +2,13 @@ import { NextResponse } from "next/server"
 
 import { cvSchema, experienceSchema } from "@/lib/cv"
 import {
-  adaptCVWithAI,
-  enhanceExperienceWithAI,
-  enhanceSummaryWithAI,
-  importCVWithAI,
-  isGenAIConfigured,
-  optimizeCVForATS,
-  generateMotivationLetterWithAI,
+    adaptCVWithAI,
+    enhanceExperienceWithAI,
+    enhanceSummaryWithAI,
+    importCVWithAI,
+    isGenAIConfigured,
+    optimizeCVForATS,
+    generateMotivationLetterWithAI,
 } from "@/lib/ai/google"
 
 const json = (data: unknown, init?: ResponseInit) =>
@@ -104,7 +104,8 @@ export async function POST(request: Request) {
 
         try {
           const cv = cvSchema.parse(payload.cv)
-          const letter = await generateMotivationLetterWithAI(cv, payload.jobPosition)
+          const language = payload.language === "fr" ? "fr" : "en"
+          const letter = await generateMotivationLetterWithAI(cv, payload.jobPosition, language)
           return json({ letter })
         } catch (error) {
           console.error("/api/ai generate-motivation-letter error", error)
@@ -135,11 +136,13 @@ export async function POST(request: Request) {
 
         try {
           const cv = cvSchema.parse(payload.cv)
+          const language = payload.language === "fr" ? "fr" : "en"
           const { generateInternshipEmails } = await import("@/lib/ai/gemini/internship-analyzer")
           const emails = await generateInternshipEmails(
             payload.internshipText, 
             cv, 
-            payload.selectedSubject
+            payload.selectedSubject,
+            language
           )
           return json(emails)
         } catch (error) {

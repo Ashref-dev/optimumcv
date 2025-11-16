@@ -6,11 +6,18 @@ import type { CVData } from "@/lib/cv"
  */
 const createMotivationLetterPrompt = (
   cv: CVData,
-  jobPosition: string
+  jobPosition: string,
+  language: "en" | "fr" = "en"
 ): string => {
   const { personal, experience, education, skills } = cv
 
+  const languageInstruction = language === "fr" 
+    ? "Generate the letter in FRENCH (Français). Use formal French business language."
+    : "Generate the letter in ENGLISH."
+
   return `Generate a professional motivation letter for the following job application.
+
+**IMPORTANT: ${languageInstruction}**
 
 **Applicant Information:**
 - Name: ${personal.fullName}
@@ -57,17 +64,19 @@ Generate ONLY the letter content without any markdown formatting, headers, or ex
  * Generate a motivation letter using AI
  * @param cv - The CV data
  * @param jobPosition - Job position or description
+ * @param language - Language for the letter (en or fr)
  * @returns Generated motivation letter
  */
 export const generateMotivationLetterWithAI = async (
   cv: CVData,
-  jobPosition: string
+  jobPosition: string,
+  language: "en" | "fr" = "en"
 ): Promise<string> => {
   if (!jobPosition.trim()) {
     throw new Error("Job position is required to generate motivation letter")
   }
 
-  const prompt = createMotivationLetterPrompt(cv, jobPosition)
+  const prompt = createMotivationLetterPrompt(cv, jobPosition, language)
 
   try {
     const letter = await generateText(prompt)

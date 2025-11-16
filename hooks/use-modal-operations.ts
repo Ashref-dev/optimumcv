@@ -34,13 +34,14 @@ export function useModalOperations(
   const [showInternshipModal, setShowInternshipModal] = useState(false)
   const [jobDescription, setJobDescription] = useState("")
 
-  const handleGenerateMotivationLetter = async (jobPosition: string): Promise<string> => {
+  const handleGenerateMotivationLetter = async (jobPosition: string, language: "en" | "fr" = "en"): Promise<string> => {
     const currentCV = form.getValues()
     
     try {
       const { data, error: aiError } = await requestAI<{ letter: string }>("generate-motivation-letter", {
         cv: currentCV,
         jobPosition,
+        language,
       })
 
       if (data?.letter) {
@@ -96,7 +97,7 @@ export function useModalOperations(
     }
   }
 
-  const handleGenerateInternshipEmails = async (selectedSubject: string): Promise<InternshipEmails> => {
+  const handleGenerateInternshipEmails = async (selectedSubject: string, language: "en" | "fr" = "en"): Promise<InternshipEmails> => {
     const currentCV = form.getValues()
     const internshipText = sessionStorage.getItem('internshipText')
     
@@ -109,6 +110,7 @@ export function useModalOperations(
         cv: currentCV,
         internshipText,
         selectedSubject,
+        language,
       })
 
       if (data?.applicantEmail && data?.companyEmail) {

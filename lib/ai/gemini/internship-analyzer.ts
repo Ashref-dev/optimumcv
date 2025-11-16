@@ -112,10 +112,11 @@ export const suggestInternshipSubjects = async (
 export const generateInternshipEmails = async (
   internshipText: string,
   cvData: CVData,
-  selectedSubject: string
+  selectedSubject: string,
+  language: "en" | "fr" = "en"
 ): Promise<InternshipEmails> => {
   const client = ensureClient()
-  const prompt = createInternshipEmailGenerationPrompt(internshipText, cvData, selectedSubject)
+  const prompt = createInternshipEmailGenerationPrompt(internshipText, cvData, selectedSubject, language)
 
   try {
     const response = await client.models.generateContent({
