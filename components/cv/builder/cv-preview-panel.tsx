@@ -8,8 +8,10 @@ export function CVPreviewPanel({ children }: { children: ReactNode }) {
   return (
     <div className="relative">
       <div className="absolute inset-0 -z-10 rounded-[32px] bg-gradient-to-br from-primary/10 via-transparent to-primary/5 blur-3xl" />
-      <ScrollArea className="h-[720px] rounded-3xl border border-border/60 bg-muted/40 p-6">
-        {children}
+      <ScrollArea className="rounded-3xl border border-border/60 bg-muted/40 p-6">
+        <div className="flex flex-col gap-6">
+          {children}
+        </div>
       </ScrollArea>
     </div>
   )
